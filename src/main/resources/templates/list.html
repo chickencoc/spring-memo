@@ -5,20 +5,22 @@
 </head>
 <body>
 	<div id="wrap" class="container pt-3 pb-3">
-		<div id="header"></div>
-		<div id="content-wrap">
-			<div id="content-top">
-				<form class="hstack gap-3">
-					<input type="text" class="form-control me-auto" name="q" th:value="${q}" placeholder="Search..." aria-label="Search..." autocomplete="off" />
-					<button type="submit" id="btn-submit" class="btn btn-outline-secondary">Submit</button>
-					<div class="vr"></div>
-					<a type="button" id="btn-reset" class="btn btn-outline-danger" href="/memo/list">Reset</a>
-					<a type="button" id="btn-new" class="btn btn-primary" href="/memo/write">New</a>
-				</form>
-			</div>
+		<div th:replace="~{fragment/user_status.html :: frag-user-status}" ></div>
+		<div id="header">
+			<form class="hstack gap-3">
+				<a type="button" id="btn-reset" class="btn btn-warning" href="/memo/list"><span class="btn-text">Home</span></a>
+				<div class="vr"></div>
+				<input type="text" class="form-control" name="q" th:value="${q}" placeholder="Search keyword..." aria-label="keyword." autocomplete="off" />
+				<button type="submit" id="btn-submit" class="btn btn-outline-secondary"><span class="btn-text">Search</span></button>
+				<div class="vr"></div>
+				<a type="button" id="btn-new" class="btn btn-success" href="/memo/write"><span class="btn-text">New</span></a>
+			</form>
 			<hr />
+		</div>
+		<div id="content-wrap">
+			<div id="content-top"></div>
 			<div id="content-body">
-				<table id="content-list" class="table" style="font-family: 'Cascadia Mono', 'SamsungOne', -apple-system, auto;">
+				<table id="content-list" class="table">
 					<thead>
 						<tr class="table-secondary border-1">
 							<th class="text-center" style="width: 55px">No</th>
@@ -30,7 +32,7 @@
 						<tr th:class="${stat.index % 2 == 0 ? '' : 'table-light'}" th:each="memo, stat : ${memoList}">
 							<td class="content-seq text-center align-middle" th:text="${stat.index + 1}"></td>
 							<td class="content-title text-break">
-								<a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" th:text="${memo.title}" th:href="${'/memo/view/' + memo.seq}"></a>
+								<a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover ct-btn" th:text="${memo.title}" th:href="${'/memo/view/' + memo.seq + (q != null ? ('?q=' + q) : '')}"></a>
 							</td>
 							<td class="content-crdte text-center align-middle" th:text="${#temporals.format(memo.crdte, 'yyyy-MM-dd')}">
 							</td>

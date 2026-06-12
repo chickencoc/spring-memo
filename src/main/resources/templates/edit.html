@@ -67,7 +67,7 @@
 				param[key] = val;
 			}
 
-			fetch("/api/memo/save", {
+			fetch("/api/memo/update", {
 					method: "POST",
 					cache: "no-cache",
 					credentials: "same-origin",
@@ -75,10 +75,17 @@
 					body: JSON.stringify(param),
 			}).then(res => res.json())
 			.then(data => {
-				if(data?.seq !== '' || data?.seq !== undefined) {
-					location.replace('/memo/view/' + data.seq);
+				
+				if(data?.seq == null ) {
+					alert("업데이트 오류");
+				} else {
+					if(data?.seq !== '' || data?.seq !== undefined) {
+						location.replace('/memo/view/' + data.seq);
+					}
+					// TODO error 처리
+					
 				}
-				// TODO error 처리
+				
 				
 				loading.style.display = "none";
 				ff = false;

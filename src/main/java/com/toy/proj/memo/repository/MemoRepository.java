@@ -19,6 +19,8 @@ public interface MemoRepository extends JpaRepository<Memo, Integer> {
 	List<Memo> findByTitleLikeOrContentLikeOrderByCrdteDesc(String keyword1, String keyword2);
 	
 	List<Memo> findByOrderByCrdteDesc();
+
+	List<Memo> findByCrmidLikeOrderByCrdteDesc(String uid);
 	
 	Optional<Memo> findBySerial(String serial);
 }

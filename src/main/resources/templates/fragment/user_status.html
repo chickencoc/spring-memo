@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <div th:fragment="frag-user-status" style="margin-bottom: 1em; text-align: center;">
+    	<div th:if="${session.SES_USER.status} == 'GUEST'">
+			<span class="badge text-secondary" th:text="${session.SES_USER.uid}">user</span>
+	    	<a class="btn badge btn-primary" href="/memo/login" ><span class="btn-text">로그인</span></a>
+    	</div>
+    	<div th:if="${session.SES_USER.status} != 'GUEST'">
+			<span class="badge text-dark" th:text="${session.SES_USER.uid}">user</span>
+	    	<a class="btn badge btn-dark" href="javascript:logout()" ><span class="btn-text">로그아웃</span></a>
+    	</div>
+    	<hr />
+    	<script>
+    		function logout() {
+    			fetch("/api/login/expire").then(res => res.text()).then(txt => txt == 'true' && (location.href="/memo/list") )
+    		}
+    	</script>
+    </div>
+</html>

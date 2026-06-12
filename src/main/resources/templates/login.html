@@ -11,23 +11,23 @@
 	<div id="loading_box" style="width: 100%; height: 100%; position: absolute; display: none; justify-content: center; align-items: center; background-color: #ccc4;">
         <img src="/static/images/loading_pen.gif" style="width: 50px;">
     </div>
-	<div id="wrap" class="container pt-3 pb-3" style="max-width: 800px; letter-spacing: -0.5px">
+	<div id="wrap" class="container pt-3 pb-3" style="margin-top: 25px; max-width: 800px; letter-spacing: -0.5px">
 		<div id="content-top" class="text-center">
 			<div>
-				<img style="width: 75px;" th:src="@{/static/images/duck_memo.png}" />
+				<img style="width: 55px;" th:src="@{/static/images/duck_logo2_circle.png}" />
 			</div>
 			<span class="badge text-bg-secondary text-uppercase">b e t a</span>
 			<div class="fs-3 mb-4">Login Memo</div>
 		</div>
 		<div id="content-wrap" class="m-auto p-3 bg-light border rounded w-275" action="" method="post">
 			<div id="content-body" class="d-flex flex-column" style="gap: 0.325em;">
-				<label for="id">Username or email address</label>
-				<input type="text" id="id" class="form-control" name="id" />
-				<label for="password" class="mt-2">Password</label>
-				<input type="password" id="password" class="form-control" name="password" />
+				<label for="uid">Username or email address</label>
+				<input type="text" id="uid" class="form-control" name="uid" autofocus />
+				<label for="upw" class="mt-2">Password</label>
+				<input type="password" id="upw" class="form-control" name="upw" />
 			</div>
 			<div id="content-btn-box">
-				<button id="login-btn" class="btn btn-success w-100 mt-3">Login</button>
+				<button id="login-btn" class="btn btn-success w-100 mt-3" onclick="auth()">Login</button>
 			</div>
 		</div>
 		<div id="content-bottom" class="border rounded w-275 mx-auto mt-3 p-2 text-center">
@@ -38,7 +38,41 @@
 	</div>
 
 	<script th:inline="javascript">
-		
+	
+		document.querySelector('#upw').addEventListener("keydown", (e) => {
+			e.keyCode == '13' && auth()			
+		})	
+	
+		function auth() {
+			
+			const uid = document.querySelector('#uid').value;
+			const upw = document.querySelector('#upw').value;
+			
+			if(uid === '' || upw === '') {
+				alert("아이디, 비밀번호 입력 필요")
+				return;
+			}
+			
+			//const userData = btoa(`{"uid": ${uid}, "upw": ${upw}}`)
+			
+			fetch("/api/login/auth", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				//body: JSON.stringify({"userData": userData})
+				body: JSON.stringify({"uid": uid, "upw": upw})
+			}).then(res => res.json()).then(json => {
+				
+				console.log(json);
+				if( json.code == "SUCCESS" ) {
+					location.replace("/memo/list");
+				} else {
+					alert("로그인 실패 : " + json.code)
+				}
+				
+			})
+		}
 	</script>
 </body>
 </html>

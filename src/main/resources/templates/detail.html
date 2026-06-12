@@ -5,13 +5,14 @@
 </head>
 <body>
 	<div id="wrap" class="container pt-3 pb-3">
+		<div th:replace="~{fragment/user_status.html :: frag-user-status}" ></div>
 		<div id="header">
 			<div class="btn-toolbar mb-3 justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
 				<div class="btn-group" role="group" aria-label="First group">
-					<a type="button" class="btn btn-outline-secondary" href="/memo/list">Back</a>
+					<a type="button" class="btn btn-outline-secondary" th:href="${'/memo/list' + (q != null ? ('?q=' + q) : '')}"><span class="btn-text">Back</span></a>
 				</div>
-				<div class="btn-group" role="group" aria-label="Second group">
-					<a type="button" class="btn btn-warning" th:href="'/memo/edit/' + ${memo.seq}">Edit</a>
+				<div class="btn-group" role="group" aria-label="Second group" th:if="${chkAuth}">
+					<a type="button" class="btn btn-secondary" th:href="'/memo/edit/' + ${memo.seq}"><span class="btn-text">Edit</span></a>
 				</div>
 			</div>
 		</div>
@@ -19,16 +20,16 @@
 		<div id="content-wrap">
 			<div id="content-top">
 				<div id="content-title" class="fs-5 fw-bold text-break" th:text="${memo.title}"></div>
-				<div class="mt-2 text-end">
-					<span id="link-copy" class="separator" onclick="copyUrl()">copy</span>
+				<div id="content-info" class="mt-2 text-end">
+					<span id="link-copy" class="separator ct-btn" onclick="copyUrl()">copy</span>
 					<span id="content-serial" class="separator" th:text="${memo.serial}"></span>
-					<span id="content-created" style="min-width: 150px;" th:text="${#temporals.format(memo.crdte, 'yyyy-MM-dd HH:mm')}"></span>
+					<span id="content-created" th:text="${#temporals.format(memo.crdte, 'yyyy-MM-dd HH:mm')}"></span>
 				</div>
 			</div>
 			<hr />
 			<div id="content-body" class="px-3">
 				<div id="content-main">
-					<pre id="content-detail" class="text-break" style="min-height: 40em; line-height: 1.4; white-space: break-spaces;" th:text="${memo.content}"></pre>
+					<pre id="content-detail" class="text-break" th:text="${memo.content}"></pre>
 				</div>
 				<div id="content-button-wrap"></div>
 			</div>
@@ -40,13 +41,16 @@
 						<div id="content-updated" class="d-inline">updated : <span th:text="${#temporals.format(memo.updte, 'yyyy-MM-dd HH:mm')}"></span></div>
 					</div>
 				</div>
+				<hr />
+				<div id="memo-log-box" style='font-size: 0.9em;'>
+				</div>
 			</div>
 		</div>
 		<hr />
 		<div id="footer"></div>
 	</div>
 
-	<script>
+	<script th:inline="javascript">
 		function copyUrl() {
 			const url = window.location.href; // 현재 페이지 URL 가져오기
 			const copyTag = document.querySelector("#link-copy");
@@ -74,6 +78,40 @@
 
 			document.body.removeChild(textarea);
 		}
+		
+		// memo log
+		function memoHistory() {
+			fetch('/api/mlog/' + /*[[${memo.seq}]]*/ "")
+			.then(res => res.json())
+			.then(json => {
+				
+				if(json.length == 0) return;
+				
+				let html = '<strong>History</strong>';
+				
+				for(item of json) {
+					html += `<div style="padding-left: 1em;">`
+					html += `	<div id="memo-log-title" class="d-inline me-3">${xssReplace(item.title)}</div>`
+					html += `	<div id="memo-log-time" class="d-inline">${ new Date( item.crdte ).toLocaleString([], { hour12: false, dateStyle: "medium", timeStyle: "short" }) }</div>`
+					html += `	<div id="memo-log-uid" class="d-inline">${xssReplace(item.crmid)}</div>`
+					html += `</div>`
+				}
+				
+				document.querySelector('#memo-log-box').innerHTML = html;
+			});
+		}
+		
+		function xssReplace(param) {
+			return param.replaceAll("&", "&amp;")
+						.replaceAll("\"", "&quot;")
+						.replaceAll("'", "&apos;")
+						.replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;")
+						.replaceAll("\r", "<br>")
+						.replaceAll("\n", "<p>");
+		}
+		
+		memoHistory()
 	</script>
 </body>
 </html>

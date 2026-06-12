@@ -18,7 +18,7 @@ public class MemoLog extends TimeEntity {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String seq;
+	private int seq;
 	private String serial;
     private String title;
     private String content;
@@ -27,7 +27,7 @@ public class MemoLog extends TimeEntity {
     private LocalDateTime orgdte;
 
     @Builder
-    public MemoLog(String seq, String serial, String title, String content, int memoSeq, String orgmid, LocalDateTime orgdte, String crmid) {
+    public MemoLog(int seq, String serial, String title, String content, int memoSeq, String orgmid, LocalDateTime orgdte, String crmid, String upmid) {
         this.seq = seq;
         this.serial = serial;
         this.title = title;
@@ -36,5 +36,6 @@ public class MemoLog extends TimeEntity {
         this.orgmid = orgmid;
         this.orgdte = orgdte;
         this.crmid = crmid;
+        this.upmid = upmid;
     }
 }

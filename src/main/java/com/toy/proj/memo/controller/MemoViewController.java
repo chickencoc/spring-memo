@@ -1,7 +1,5 @@
 package com.toy.proj.memo.controller;
 
-import java.util.Objects;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.toy.proj.common.ComField;
+import com.toy.proj.member.model.Member;
 import com.toy.proj.memo.model.Memo;
 import com.toy.proj.memo.service.MemoService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -22,8 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class MemoViewController {
 
     private final MemoService memoService;
+    
+    @GetMapping({"/", ""})
+    public String main() {
+    	return "redirect:/memo/list";
+    }
 
-    @GetMapping({"/list", ""})
+    @GetMapping("/list")
     public String memoList(Model model, @RequestParam(name="q", required = false) String keyword) {
         
     	if(keyword == null || keyword.isBlank()) {
@@ -37,10 +43,15 @@ public class MemoViewController {
     }
     
     @GetMapping("/view/{seq}")
-    public String memoView(Model model, @PathVariable Integer seq) {
+    public String memoView(HttpSession session, Model model, @PathVariable Integer seq, @RequestParam(name="q", required = false) String keyword) {
     	
-		model.addAttribute("memo", memoService.getMemo(seq));
-		
+    	Memo memo = memoService.getMemo(seq);
+    	boolean chkAuth = memoService.checkAuthority( (Member) session.getAttribute(ComField.SES_USER), memo);
+    	
+		model.addAttribute("memo", memo);
+		model.addAttribute("q", keyword);
+		model.addAttribute("chkAuth", chkAuth);
+				
     	return "detail";
     }
     
@@ -52,24 +63,27 @@ public class MemoViewController {
     }
     
     @GetMapping("/edit/{seq}")
-    public String editView(Model model, @PathVariable Integer seq) {
+    public String editView(HttpSession session, Model model, @PathVariable Integer seq, @RequestParam(name="q", required = false) String keyword) {
+    	
+    	Memo memo = memoService.getMemo(seq);
+    	boolean chkAuth = memoService.checkAuthority( (Member) session.getAttribute(ComField.SES_USER), memo);
+    	
+    	if(!chkAuth)
+    		return "redirect:/memo/view/" + seq;
     	
     	model.addAttribute("memo", memoService.getMemo(seq));
-    	return "write";
+    	model.addAttribute("q", keyword);
+		
+    	return "edit";
     }
     
     @PostMapping("/view")
     public String createMemo(HttpServletRequest request, Memo memo) {
     	
-    	// TODO 임시 아이디를 IP로 사용
-    	String ip = request.getHeader("X-FORWARDED-FOR");
+    	Member member = (Member) request.getSession().getAttribute( ComField.SES_USER );
     	
-    	if(ip == null) {
-    		ip = request.getRemoteAddr();
-    	}
-    	
-    	memo.setCrmid(ip);
-    	memo.setUpmid(ip);
+    	memo.setCrmid(member.getUid());
+    	memo.setUpmid(member.getUid());
     	
     	Memo newMemo = memoService.createMemo(memo);
     	return "redirect:/memo/view/" + newMemo.getSerial();
