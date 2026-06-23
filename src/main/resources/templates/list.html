@@ -4,35 +4,35 @@
 	<title th:replace="~{fragment/head.html :: frag-head}" ></title>
 </head>
 <body>
-	<div id="wrap" class="container pt-3 pb-3">
+	<div id="wrap">
 		<div th:replace="~{fragment/user_status.html :: frag-user-status}" ></div>
 		<div id="header">
-			<form class="hstack gap-3">
-				<a type="button" id="btn-reset" class="btn btn-warning" href="/memo/list"><span class="btn-text">Home</span></a>
-				<div class="vr"></div>
+			<form class="memo-search-bar">
+				<a id="btn-reset" class="btn btn-outline" href="/memo/list"><span class="btn-text">Home</span></a>
+				<div class="memo-divider-vertical"></div>
 				<input type="text" class="form-control" name="q" th:value="${q}" placeholder="Search keyword..." aria-label="keyword." autocomplete="off" />
-				<button type="submit" id="btn-submit" class="btn btn-outline-secondary"><span class="btn-text">Search</span></button>
-				<div class="vr"></div>
-				<a type="button" id="btn-new" class="btn btn-success" href="/memo/write"><span class="btn-text">New</span></a>
+				<button type="submit" id="btn-submit" class="btn btn-outline"><span class="btn-text">Search</span></button>
+				<div class="memo-divider-vertical"></div>
+				<a id="btn-new" class="btn" href="/memo/write"><span class="btn-text">New</span></a>
 			</form>
 			<hr />
 		</div>
 		<div id="content-wrap">
 			<div id="content-top"></div>
 			<div id="content-body">
-				<table id="content-list" class="table">
+				<table id="content-list">
 					<thead>
-						<tr class="table-secondary border-1">
-							<th class="text-center" style="width: 55px">No</th>
-							<th class="w-50">Title</th>
-							<th class="text-center" style="width: 125px">Created</th>
+						<tr>
+							<th class="content-seq text-center">No</th>
+							<th>Title</th>
+							<th class="content-crdte text-center">Created</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:class="${stat.index % 2 == 0 ? '' : 'table-light'}" th:each="memo, stat : ${memoList}">
+						<tr th:each="memo, stat : ${memoList}">
 							<td class="content-seq text-center align-middle" th:text="${stat.index + 1}"></td>
 							<td class="content-title text-break">
-								<a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover ct-btn" th:text="${memo.title}" th:href="${'/memo/view/' + memo.seq + (q != null ? ('?q=' + q) : '')}"></a>
+								<a class="ct-btn" th:text="${memo.title}" th:href="${'/memo/view/' + memo.seq + (q != null ? ('?q=' + q) : '')}"></a>
 							</td>
 							<td class="content-crdte text-center align-middle" th:text="${#temporals.format(memo.crdte, 'yyyy-MM-dd')}">
 							</td>

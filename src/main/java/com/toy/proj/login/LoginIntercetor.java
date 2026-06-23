@@ -1,5 +1,7 @@
 package com.toy.proj.login;
 
+import java.util.UUID;
+
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,18 +20,9 @@ public class LoginIntercetor implements HandlerInterceptor {
 		HttpSession ses = request.getSession();
 		Member member = (Member) ses.getAttribute( ComField.SES_USER );
 		
-		if( member == null || member.getStatus().equals( ComField.MEM_STATUS_GUEST ) ) {
-			
-			String ip = request.getHeader("X-FORWARDED-FOR");
-	    	
-	    	if(ip == null) {
-	    		ip = request.getRemoteAddr();
-	    	}
-			
-	    	String s = ( (Long) (System.currentTimeMillis() / 1000L) ).toString();
-	    	
-	    	member = Member.getGuestMember(s);
-	    	ses.setAttribute( ComField.SES_USER, member );
+		if( member == null ) {
+			member = Member.getGuestMember(ComField.GUEST_UID_PREFIX + UUID.randomUUID(), "Guest");
+			ses.setAttribute( ComField.SES_USER, member );
 		}
 		
 		return true;

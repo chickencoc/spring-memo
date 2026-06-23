@@ -44,13 +44,17 @@ public class Member extends TimeEntity {
 		this.team = "NONE";
 	}
     
-    public static Member getGuestMember(String uid) {
-    	Member m = new Member();
-    	m.setUid(uid);
-    	m.setUname(uid);
-    	m.setUseYn('Y');
-    	m.setStatus(ComField.MEM_STATUS_GUEST);
-    	return m;
+    public static Member getGuestMember(String uid, String uname) {
+		Member m = new Member();
+		m.setUid(uid);
+		m.setUname(uname);
+		m.setUseYn('Y');
+		m.setStatus(ComField.MEM_STATUS_GUEST);
+		return m;
+    }
+
+    public String getDisplayName() {
+		return uname == null || uname.isBlank() ? uid : uname;
     }
     
     

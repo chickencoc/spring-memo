@@ -15,11 +15,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		
-		registry.addInterceptor(loginInterceptor()).addPathPatterns("/memo/**");
+		registry.addInterceptor(loginInterceptor()).addPathPatterns("/memo/**", "/api/memo/**", "/api/mlog/**");
+		registry.addInterceptor(csrfTokenInterceptor()).addPathPatterns("/memo/**", "/api/**");
 	}
 
 	@Bean
 	LoginIntercetor loginInterceptor() {
 		return new LoginIntercetor();
+	}
+
+	@Bean
+	CsrfTokenInterceptor csrfTokenInterceptor() {
+		return new CsrfTokenInterceptor();
 	}
 }

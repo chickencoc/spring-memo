@@ -5,10 +5,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-import javax.management.RuntimeErrorException;
-
-import org.hibernate.validator.internal.engine.messageinterpolation.parser.MessageDescriptorFormatException;
-
 public interface ComUtil {
 
 	public static String getSaltString(int x) {

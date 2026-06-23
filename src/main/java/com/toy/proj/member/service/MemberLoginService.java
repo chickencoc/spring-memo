@@ -33,6 +33,9 @@ public class MemberLoginService {
 				}
 				
 				if( member.getUpw().equals( ComUtil.toSha256String( upw ) ) ) {
+					if(request.getSession(false) != null) {
+						request.changeSessionId();
+					}
 					request.getSession().setAttribute(ComField.SES_USER, member);
 					return CodeField.SUCCESS;
 				}

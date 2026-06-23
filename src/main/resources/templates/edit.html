@@ -4,38 +4,38 @@
 	<title th:replace="~{fragment/head.html :: frag-head}" ></title>
 </head>
 <body>
-	<div id="loading_box" style="width: 100%; height: 100%; position: absolute; display: none; justify-content: center; align-items: center; background-color: #ccc4;">
-        <img src="/static/images/loading_pen.gif" style="width: 75px;">
+	<div id="loading_box">
+        <img src="/static/images/loading_pen.gif" alt="Loading">
     </div>
-	<div id="wrap" class="container pt-3 pb-3">
+	<div id="wrap">
 		<div th:replace="~{fragment/user_status.html :: frag-user-status}" ></div>
 		<div id="header">
-			<div class="btn-toolbar mb-3 justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-				<div class="btn-group" role="group" aria-label="First group">
-					<a type="button" class="btn btn-outline-secondary" href="/memo/list"><span class="btn-text">Back</span></a>
+			<div class="memo-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+				<div class="memo-button-group" role="group" aria-label="First group">
+					<a class="btn btn-outline" href="/memo/list"><span class="btn-text">Back</span></a>
 				</div>
-				<div class="btn-group" role="group" aria-label="Second group">
-					<button id="btn_save" type="button" class="btn btn-success"><span class="btn-text">Save</span></button>
+				<div class="memo-button-group" role="group" aria-label="Second group">
+					<button id="btn_save" type="button" class="btn"><span class="btn-text">Save</span></button>
 				</div>
 			</div>
 			<hr />
 		</div>
 		<form id="content-wrap" action="/memo/view" method="post">
-			<div id="content-top" class="d-flex justify-content-between align-items-center">
+			<div id="content-top">
 				<input id="content-title" name="title" class="form-control" placeholder="title..." th:value="${memo.title}" />
 			</div>
 			<hr />
 			<div id="content-body">
 				<div id="content-main">
 					<textarea id="content-detail" name="content" class="form-control"
-							  style="height: 40em; line-height: 1.3; font-size:0.9em; font-family: 'Cascadia Mono', 'SamsungOne', -apple-system, auto;"
 							  placeholder="content..." th:text="${memo.content}"></textarea>
 					<div id="content-button-wrap"></div>
 				</div>
-				<input name="locked" style="display: none" value="false" />
-				<input name="dirSeq" style="display: none" th:value="${memo.dirSeq}" />
-				<input name="serial" style="display: none" th:value="${memo.serial}" />
-				<input name="seq" style="display: none" th:value="${memo.seq}" />
+				<input type="hidden" name="locked" value="false" />
+				<input type="hidden" name="dirSeq" th:value="${memo.dirSeq}" />
+				<input type="hidden" name="serial" th:value="${memo.serial}" />
+				<input type="hidden" name="seq" th:value="${memo.seq}" />
+				<input type="hidden" name="_csrf" th:value="${session.CSRF_TOKEN}" />
 			</div>
 			<div id="content-bottom"></div>
 		</form>
@@ -59,6 +59,10 @@
 			const dataMap = new FormData(form);
 			
 			for([key, val] of dataMap.entries()) {
+				if(key == '_csrf') {
+					continue;
+				}
+
 				if(key == 'title' && (val == undefined || val == '')) {
 					alert("제목을 입력하세요.");
 					return;
@@ -71,7 +75,7 @@
 					method: "POST",
 					cache: "no-cache",
 					credentials: "same-origin",
-					headers: { "Content-Type": "application/json"},
+					headers: memoCsrfHeaders({ "Content-Type": "application/json"}),
 					body: JSON.stringify(param),
 			}).then(res => res.json())
 			.then(data => {

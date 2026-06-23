@@ -2,6 +2,7 @@ package com.toy.proj.memo.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,11 +47,11 @@ public class MemoApiController {
     	
     	Member member = (Member) request.getSession().getAttribute( ComField.SES_USER );
     	
-    	boolean chkAuth = memoService.checkAuthority(member, memoDto);
+		boolean chkAuth = memoService.canEditMemo(member, memoDto.getSeq());
     	
-    	if(!chkAuth) {
-    		return ResponseEntity.ok(new Memo());
-    	}
+		if(!chkAuth) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
     	
         memoDto.setCrmid(member.getUid());
         memoDto.setUpmid(member.getUid());

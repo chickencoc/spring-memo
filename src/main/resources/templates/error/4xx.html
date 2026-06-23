@@ -4,11 +4,11 @@
     <title th:replace="~{fragment/head.html :: frag-head}" ></title>
 </head>
 <body>
-    <div id="wrap" class="container pt-3 pb-3" style="max-width: 800px">
-        <div class="mt-5" style="font-family: 'Cascadia Mono', 'SamsungOne', -apple-system, auto; text-align: center;">
-            <h1 style="font-size: xxx-large; letter-spacing: 0.6em; text-indent: 0.6em;">404</h1>
-            <h1 style="font-size: x-large; letter-spacing: -0.05em; color: red;">PAGE NOT FOUND</h1>
-            <div style="display: none;">
+    <div id="wrap" class="error-page">
+        <div class="error-panel">
+            <h1 class="error-code">4XX</h1>
+            <h1 class="error-title">REQUEST ERROR</h1>
+            <div hidden>
                 <span>https://stackoverflow.com/questions/21612058/letter-spacing-wrong-text-center-alignment</span>
                 <span>letter-spacing 옵션을 높게 주면 글자 맨마지막 부분에도 공백이 들어가는 현상 해결 방법</span>
                 <span>text-indent 값을 letter-spacing 만큼 사용 : 들여쓰기 옵션</span>

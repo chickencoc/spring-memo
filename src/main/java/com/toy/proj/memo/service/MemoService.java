@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.toy.proj.common.ComField;
 import com.toy.proj.member.model.Member;
+import com.toy.proj.member.repository.MemberRepository;
 import com.toy.proj.memo.model.Memo;
 import com.toy.proj.memo.repository.MemoLogRepository;
 import com.toy.proj.memo.repository.MemoRepository;
@@ -20,6 +22,7 @@ public class MemoService {
 
     private final MemoRepository memoRepository;
     private final MemoLogRepository memoLogRepository;
+    private final MemberRepository memberRepository;
     
 
     // 메모 등록 Create
@@ -81,24 +84,44 @@ public class MemoService {
         return memoRepository.getListOfMemo(keyword);
     }
     
+    public boolean canEditMemo(Member member, Integer memoSeq) {
+		if(memoSeq == null) {
+			return false;
+		}
+
+		return memoRepository.findById(memoSeq)
+				.map(memo -> canEditMemo(member, memo))
+				.orElse(false);
+    }
+
+    public boolean canEditMemo(Member member, Memo memo) {
+		if(member == null || memo == null) {
+			return false;
+		}
+
+		if(ComField.MEM_STATUS_ADMIN.equals(member.getStatus())) {
+			return true;
+		}
+
+		return member.getUid() != null && member.getUid().equals(memo.getCrmid());
+    }
+
     public boolean checkAuthority(Member member, Memo memoDto) {
-    	
-    	boolean chk = false;
-    	
-    	Optional<Memo> optMemo = memoRepository.findById(memoDto.getSeq());
-    	
-    	if(optMemo.isPresent()) {
-    		Memo memo = optMemo.get();
-    		
-    		chk = memo.getCrmid().equals( member.getUid() );
-    		
-    		if(!chk) {
-    			chk = member.getStatus().equals( ComField.MEM_STATUS_ADMIN );    			
-    		}
-    	}
-    	
-    	
-    	return chk;
+		return memoDto != null && canEditMemo(member, memoDto.getSeq());
+    }
+
+    public String getMemberDisplayName(String uid) {
+		if(!StringUtils.hasText(uid)) {
+			return "";
+		}
+
+		if(uid.startsWith(ComField.GUEST_UID_PREFIX)) {
+			return "Guest";
+		}
+
+		return memberRepository.findById(uid)
+				.map(Member::getDisplayName)
+				.orElse(uid);
     }
 
 }

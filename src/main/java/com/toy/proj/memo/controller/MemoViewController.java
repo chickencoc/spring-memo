@@ -46,11 +46,13 @@ public class MemoViewController {
     public String memoView(HttpSession session, Model model, @PathVariable Integer seq, @RequestParam(name="q", required = false) String keyword) {
     	
     	Memo memo = memoService.getMemo(seq);
-    	boolean chkAuth = memoService.checkAuthority( (Member) session.getAttribute(ComField.SES_USER), memo);
+		boolean chkAuth = memoService.canEditMemo( (Member) session.getAttribute(ComField.SES_USER), memo);
     	
 		model.addAttribute("memo", memo);
 		model.addAttribute("q", keyword);
 		model.addAttribute("chkAuth", chkAuth);
+		model.addAttribute("writerDisplayName", memoService.getMemberDisplayName(memo.getCrmid()));
+		model.addAttribute("updaterDisplayName", memoService.getMemberDisplayName(memo.getUpmid()));
 				
     	return "detail";
     }
@@ -66,7 +68,7 @@ public class MemoViewController {
     public String editView(HttpSession session, Model model, @PathVariable Integer seq, @RequestParam(name="q", required = false) String keyword) {
     	
     	Memo memo = memoService.getMemo(seq);
-    	boolean chkAuth = memoService.checkAuthority( (Member) session.getAttribute(ComField.SES_USER), memo);
+		boolean chkAuth = memoService.canEditMemo( (Member) session.getAttribute(ComField.SES_USER), memo);
     	
     	if(!chkAuth)
     		return "redirect:/memo/view/" + seq;

@@ -4,11 +4,11 @@
     <title th:replace="~{fragment/head.html :: frag-head}" ></title>
 </head>
 <body>
-    <div id="wrap" class="container pt-3 pb-3" style="max-width: 800px">
-        <div class="mt-5" style="font-family: 'Cascadia Mono', 'SamsungOne', -apple-system, auto; text-align: center;">
-            <h1 style="font-size: xxx-large; letter-spacing: 0.6em; text-indent: 0.6em;" th:text="${status}">status</h1>
-            <h1 style="font-size: x-large; letter-spacing: -0.05em; color: darksalmon;" th:text="${error}">error</h1>
-            <button class="btn btn-outline-dark mt-3" onclick="javascript:history.back()">이전 페이지</button>
+    <div id="wrap" class="error-page">
+        <div class="error-panel">
+            <h1 class="error-code" th:text="${status}">status</h1>
+            <h1 class="error-title" th:text="${error}">error</h1>
+            <button class="btn btn-outline error-action" onclick="javascript:history.back()">이전 페이지</button>
         </div>
     </div>
 </body>

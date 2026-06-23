@@ -9,13 +9,13 @@
               content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
         <title>Memo · Ducking</title>
+        <meta name="_csrf" th:content="${session.CSRF_TOKEN}">
+        <meta name="_csrf_header" content="X-CSRF-TOKEN">
 
         <link rel="icon" type="image/x-icon" th:href="@{/static/images/duck_logo2_circle_24px.png}">
-        <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="/static/app_dell.css" type="text/css" />
         <link rel="stylesheet" href="/static/app.css" type="text/css" />
-        
-        <style>
-        </style>
+        <script src="/static/js/common.js"></script>
     </head>
     <head th:fragment="frag-headTitle(titleValue)">
         <meta charset="UTF-8">
@@ -26,12 +26,12 @@
               content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
         <title th:text="${titleValue}">Memo · Ducking</title>
+        <meta name="_csrf" th:content="${session.CSRF_TOKEN}">
+        <meta name="_csrf_header" content="X-CSRF-TOKEN">
 
         <link rel="icon" type="image/x-icon" th:href="@{/static/images/duck_logo2_circle_24px.png}">
-        <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="/static/app_dell.css" type="text/css" />
         <link rel="stylesheet" href="/static/app.css" type="text/css" />
-        
-        <style>
-        </style>
+        <script src="/static/js/common.js"></script>
     </head>
 </html>

@@ -2,7 +2,6 @@ package com.toy.proj.member.controller;
 
 import java.util.HashMap;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +33,7 @@ public class MemberLoginApiController {
 		return ResponseDto.code(result).build();
 	}
 	
-	@GetMapping("/expire")
+	@PostMapping("/expire")
 	public boolean logout(HttpSession session) {
 		session.invalidate();
 		
