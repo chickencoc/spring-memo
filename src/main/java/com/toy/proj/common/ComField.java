@@ -8,6 +8,7 @@ public interface ComField {
 	public static String CSRF_PARAMETER_NAME = "_csrf";
 	
 	public static String MEM_STATUS_ADMIN = "ADMIN";
+	public static String MEM_STATUS_USER = "USERS";
 	public static String MEM_STATUS_GUEST = "GUEST";
 	public static String GUEST_UID_PREFIX = "guest-";
 	

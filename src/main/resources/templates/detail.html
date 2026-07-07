@@ -93,7 +93,7 @@
 					html += `<div class="memo-log-row">`
 					html += `	<div class="memo-log-item memo-log-title">${xssReplace(item.title)}</div>`
 					html += `	<div class="memo-log-item">${ new Date( item.crdte ).toLocaleString([], { hour12: false, dateStyle: "medium", timeStyle: "short" }) }</div>`
-					html += `	<div class="memo-log-item">${xssReplace(item.crmid)}</div>`
+					// html += `	<div class="memo-log-item">${xssReplace(item.crmid)}</div>`
 					html += `</div>`
 				}
 				

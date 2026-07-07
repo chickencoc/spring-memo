@@ -32,7 +32,7 @@ public class MemberLoginService {
 					return CodeField.ERR_LOGIN_USEYN;
 				}
 				
-				if( member.getUpw().equals( ComUtil.toSha256String( upw ) ) ) {
+				if( member.getUpw().equals( ComUtil.toSha256String( upw, getPwdSalt(member.getUpw()) ) ) ) {
 					if(request.getSession(false) != null) {
 						request.changeSessionId();
 					}
@@ -43,5 +43,15 @@ public class MemberLoginService {
 		}
 		
 		return CodeField.FAIL;
+	}
+	
+	private String getPwdSalt(String pwd) {
+		String[] arr = pwd.split("\\.");
+		
+		if(arr.length == 2) {
+			return arr[1];
+		}
+		
+		return "";
 	}
 }
