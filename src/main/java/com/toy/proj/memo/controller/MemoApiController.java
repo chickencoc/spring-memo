@@ -69,7 +69,7 @@ public class MemoApiController {
     // url : api/memo/all
     @GetMapping("/all")
     public ResponseEntity<List<Memo>> getAllMemo() {
-    	return ResponseEntity.ok(memoService.getAllMemo());
+    	return ResponseEntity.ok(memoService.searchMemo(""));
     }
 
     // url : api/memo/view/{serial}

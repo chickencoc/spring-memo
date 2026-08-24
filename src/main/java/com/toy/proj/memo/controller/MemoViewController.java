@@ -33,7 +33,7 @@ public class MemoViewController {
     public String memoList(Model model, @RequestParam(name="q", required = false) String keyword) {
         
     	if(keyword == null || keyword.isBlank()) {
-    		model.addAttribute("memoList", memoService.getAllMemo());    	
+    		model.addAttribute("memoList", memoService.searchMemo(""));    	
     	} else {
     		model.addAttribute("memoList", memoService.searchMemo(keyword));    		
     	}

@@ -22,7 +22,8 @@
 		</div>
 		<form id="content-wrap" action="/memo/view" method="post">
 			<div id="content-top">
-				<input id="content-title" name="title" class="form-control" placeholder="title..." th:value="${memo.title}" />
+				<input id="content-title" name="title" class="form-control" placeholder="title..." th:value="${memo.title}" style="width: 95%; display: inline-block;" />
+				<input type="checkbox" name="locked" th:checked="${memo.locked}" />
 			</div>
 			<hr />
 			<div id="content-body">
@@ -31,7 +32,7 @@
 							  placeholder="content..." th:text="${memo.content}"></textarea>
 					<div id="content-button-wrap"></div>
 				</div>
-				<input type="hidden" name="locked" value="false" />
+				<!-- <input type="hidden" name="locked" value="false" /> -->
 				<input type="hidden" name="dirSeq" th:value="${memo.dirSeq}" />
 				<input type="hidden" name="serial" th:value="${memo.serial}" />
 				<input type="hidden" name="seq" th:value="${memo.seq}" />
@@ -57,9 +58,10 @@
 
 			const param = {};
 			const dataMap = new FormData(form);
+			dataMap.set('locked', document.querySelector("input[name='locked']").checked);
 			
 			for([key, val] of dataMap.entries()) {
-				if(key == '_csrf') {
+				if(key == '_csrf' && key == 'locked') {
 					continue;
 				}
 
